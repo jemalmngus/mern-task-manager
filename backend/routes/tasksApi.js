@@ -1,6 +1,6 @@
 const express = require('express');
-const router=express.Router()
-const Task = require('../models/Task'); 
+const router = express.Router()
+const Task = require('../models/Task');
 
 
 // Routes
@@ -30,13 +30,7 @@ router.post('/tasks', async function (req, res) {
 router.get('/tasks', async (req, res) => {
   try {
     const tasks = await Task.find();
-    // Extract relevant details for a more meaningful response
-    const simplifiedTasks = tasks.map(task => ({
-      id: task._id,
-      title: task.title,
-      description: task.description,
-    }));
-    res.json(simplifiedTasks);
+    res.json(tasks);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -90,4 +84,4 @@ router.delete('/tasks', async (req, res) => {
   }
 });
 
-module.exports=router;
+module.exports = router;
