@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 // material-ui
 import {
   Box,
@@ -23,7 +23,7 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 
 // project import
-import FirebaseSocial from './FirebaseSocial';
+// import FirebaseSocial from './FirebaseSocial';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
 
@@ -35,6 +35,7 @@ import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 const AuthRegister = () => {
   const [level, setLevel] = useState();
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -71,12 +72,38 @@ const AuthRegister = () => {
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
-            setStatus({ success: false });
+            const response = await fetch('http://localhost:5000/auth/register', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                firstname: values.firstname,
+                lastname: values.lastname,
+                email: values.email,
+                company: values.company,
+                password: values.password,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              // Registration successful, redirect to login page or another page
+              console.log('Registration successful');
+              setStatus({ success: true });
+             navigate('/login', { replace: true })
+            } else {
+              // Registration failed, set errors
+              setErrors({ submit: data.message || 'Registration failed' });
+            }
+
             setSubmitting(false);
-          } catch (err) {
-            console.error(err);
+          } catch (error) {
+            // Network or other errors
+            console.error('Error:', error.message);
             setStatus({ success: false });
-            setErrors({ submit: err.message });
+            setErrors({ submit: 'Something went wrong. Please try again.' });
             setSubmitting(false);
           }
         }}
@@ -249,9 +276,9 @@ const AuthRegister = () => {
                   <Typography variant="caption">Sign up with</Typography>
                 </Divider>
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <FirebaseSocial />
-              </Grid>
+              </Grid> */}
             </Grid>
           </form>
         )}

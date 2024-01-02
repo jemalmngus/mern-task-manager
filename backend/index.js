@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+
 const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
@@ -19,6 +20,8 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 // Routes
 const taskRoutes = require('./routes/tasksApi');
+const authRoutes = require('./routes/authRoutes');
+app.use('/auth', authRoutes);
 app.use(taskRoutes);
 
 app.listen(PORT, () => {

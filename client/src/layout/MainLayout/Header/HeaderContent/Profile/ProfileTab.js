@@ -1,22 +1,22 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+// ProfileTab.js
+import React, { useState } from 'react';
 
-// material-ui
+import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-
-// assets
 import { EditOutlined, ProfileOutlined, LogoutOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons';
 
-// ==============================|| HEADER PROFILE - PROFILE TAB ||============================== //
 
 const ProfileTab = ({ handleLogout }) => {
   const theme = useTheme();
 
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
+
 
   return (
     <List component="nav" sx={{ p: 0, '& .MuiListItemIcon-root': { minWidth: 32, color: theme.palette.grey[500] } }}>
@@ -32,7 +32,6 @@ const ProfileTab = ({ handleLogout }) => {
         </ListItemIcon>
         <ListItemText primary="View Profile" />
       </ListItemButton>
-
       <ListItemButton selected={selectedIndex === 3} onClick={(event) => handleListItemClick(event, 3)}>
         <ListItemIcon>
           <ProfileOutlined />
@@ -56,7 +55,7 @@ const ProfileTab = ({ handleLogout }) => {
 };
 
 ProfileTab.propTypes = {
-  handleLogout: PropTypes.func
+  handleLogout: PropTypes.func,
 };
 
 export default ProfileTab;

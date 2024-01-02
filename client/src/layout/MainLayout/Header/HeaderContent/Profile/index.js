@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
-
+import {useNavigate} from 'react-router-dom'
+import { useDispatch,useSelector } from 'react-redux';
+import { setToken } from 'store/actions/authActions';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
@@ -54,10 +56,33 @@ function a11yProps(index) {
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
 const Profile = () => {
-  const theme = useTheme();
 
+  const theme = useTheme();
+  const dispatch = useDispatch();
+
+  const navigate=useNavigate()
+  const token = useSelector((state) => state.auth.token);
+ 
+  
   const handleLogout = async () => {
-    // logout
+    try {
+      const response = await fetch('http://127.0.0.1:5000/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Include the user's JWT token
+        },
+      });
+  
+      if (response.ok) {
+        dispatch(setToken(null));
+        navigate('/login')
+      } else {
+        console.error('Logout failed');
+      }
+    } catch (error) {
+      console.error('Error during logout:', error.message);
+    }
   };
 
   const anchorRef = useRef(null);
